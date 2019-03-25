@@ -1,37 +1,158 @@
-## Welcome to GitHub Pages
+#正则
+【语法】`new RegExp('表达式','模式修饰符')`  
+##火星文 — 正则
+- 专门检索模糊范围的字符串的一种规则
+##学习技巧
+- 背、找规律
+##难点
+- 当你写完之后，自己都看不懂
+##特性
+- 懒惰
+ - 让找一个，只找一个，找到立马返回 
+ - 如：`/a/`  只找a
+- 贪婪
+ -  让找多个，就无限找（有多少找多少）
+ -  如： `/\d+/`  找一个或无限个
+ 
+##语义词
+###`\n`换行符
+###`\d` 一个数字
+###`\D`  一个非数字
+###`\s`一个空格
+###`\S`一个非空格
+###`\w`一个数字、字母、下划线
+###`\W`一个非数字、字母、下划线
+###`\b`一个边界符
+###`\B`一个非边界符
+###`i` 修饰符   忽略大小写  写在正则的后面
+###`g` 修饰符 找全局 会把整个字符串找个遍
+###`m` 修饰符  换行匹配
+###`|` 或者
+###`^`开头
+###`$`结尾
+###`()`分组
+###`[]`只代表  一个
+###`{}`量词   一个
+###`+` 量词 查找一个或者多个
+###`?`量词  可以没有，最多就一个
 
-You can use the [editor on GitHub](https://github.com/ningmeng3/ningmeng3.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+##范围
+###数字：0-9 （ASCII表64-73）
+###字符：a-z  （ASCII表97-122）、A-Z（ASCII表65-90）
+###大小写范围：[A-Za-z]
+###中文范围：[\u4e00-\u9fa5]
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+##`//`
+//里面放的是规则，遇到了指定的字符串不加`''`
+- 简写：`'abc' -> 匹配'abc'中有没有bc ->  /bc/`
+ - 常用情况：不需要字符拼接，不使用变量、参数的时候使用
+- 标准写法：`new RegExp(// || '' 修饰符)`  
+ - 标准常用情况：字符串拼接或有变量、参数的时候使用
 ```
+let str = /a/    //正则中//相当字符串类型  返回 /a/
+let str = new PegExp('a')   //返回字符串/a/
+//------------------
+let x = 'a'
+let str = 'abc'
+let re = new RegExp(x + 'b')  //  /ab/
+```
+##转义符 `\`
+ 
+在`\+一个字母`时可能会有一定含义，这些具体特殊含义的符号叫做元字符（\n   \d   \s）
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+```
+let x = 'a'
+let str = 'abc'
+let re = new RegExp('/a/');  //   /a/ -> /\/a\//
 
-### Jekyll Themes
+```
+##正则的方法
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ningmeng3/ningmeng3.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+###`.test(string)` 常用
+- 当前正则中，是否有匹配的字符串，有就返回true，没有就false
+- 返回：布尔值
 
-### Support or Contact
+```
+let str = 'kdlahAh2gjg'
+console.log(/\d/.test(str))  //true 查看字符串中是否有数字  
+console.log(/a/i.test(str)) //true 查看字符串中是否有a，不管大小写 
+//['A',index: ,]
+```
+###`.exec(string)` 只能找一个不常用
+- 找到正则**首次**匹配的字符，放到数组中
+- 没有就返回null
+index：在整个字符串中的索引
+input：整个字符串
+groups：undefined
+length：1
+```
+let str = 'kdlahAh2gjg'
+console.loa(/a/i.exec(str)) //返回寻找的大写A   
+//['A',index:5, input:'kdlahAh2gjg' groups:undefined;]
+```
+##正则中字符串的方法
+###`.match('' || /)`
+把找到的字符串放到数组中，找不到返回null，可以找一个及多个
+```
+let str = 'add89afgh1111111111111agah5ag6ra'
+console.log(str.match(/a/))  
+//["a", index: 0, input: "add89afgh1111111111111agah5ag6ra", groups: undefined]
+console.log(str.match(/a/g))  
+// 查找多个a  ["a", "a", "a", "a", "a", "a"]
+ console.log(str.match(/1+/)) 
+ //找到多个1   +就是多个的意思
+```
+###`.replace('' ||正则，'' || callback )`  替换
+把第一个参数中的字符或者规则替换成第二个参数中的字符串，或者return值
+####callback 回调函数
+每次匹配就会调用一次回调函数
+**默认用法**
+第一个参数（一般会给`$0`）：本次正则匹配的字符串 index
+第二个参数index：本次正则匹配的字符串的索引
+第三个参数input：整个字符串
+四个之后参数group：undefined
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+```
+let str ='dgkdfgfdjd'
+console.log(str.replace('jia','夹'))  //d夹d
+//-----------------------
+let may = '中国共产党总书记宣布中国国际进口'
+console.log(may.replace(/中国|总书记|进口/g,function($0){
+    let ste =''
+    for(let i = 0;i<$0.length;i++){
+    ste+='*'
+    }
+    return ste         //**共产党***宣布**国际**
+}))
+```
+####分组`()`
+用小括号表示分组，可以提权（1+1）*5
+从左往右数，有几个`()`就是几个分组
+- 在replace中，有几个分组，`$0`后面的参数就是这几个分组的值
+- 当分组和形参对应之后，又是index、input、group
+
+**注意：在分组中如果分组的后面有量词`+`，结果为量词的终点位置**
+####`[]`
+```
+let str = 'a1ca2ca3ca4ca5ca6ca7ca8c'
+console.log(str.match(/a(1|2|3)c/g)) //a1c a2c a3c
+console.log(str.match(/a[1-6]c/g))   //
+```
+####`{}`
+- {n,m}
+ - {0,1} == ?  最小没有最大1个
+ - {1,} == +  最小1个最多不限
+ - {1,3} 最少1个 最多3个
+ - {0,}* 最小没有
+ - {9}  最大最小都是9
+
+
+##重复子项
+在正则中可以分组，分组之后，可以通过分组的顺序（\+分组的顺序）拿到对应分组的内容
+- 有一个分组  \1 第一个子项
+- 有二个分组 \2 第二个子项
+>重复项不能放在子项的前面
+
+`Infinity`    无穷大
+
+
